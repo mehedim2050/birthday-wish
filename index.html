@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Birthday Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded MT Bold', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card-container {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            height: 80vh;
+            perspective: 1000px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 1s ease;
+            cursor: pointer;
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            background: white;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            transform: rotateY(180deg);
+        }
+
+        .card.open {
+            transform: rotateY(180deg);
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .birthday-gif {
+            width: 200px;
+            height: 200px;
+            margin: 20px 0;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .name-input {
+            width: 80%;
+            padding: 12px;
+            border: 2px solid #ff6b6b;
+            border-radius: 30px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: center;
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn:hover {
+            background: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .cake {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #f00;
+            opacity: 0;
+        }
+
+        .wish-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wish-btn {
+            margin: 10px;
+            padding: 10px 20px;
+            background: #74b9ff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wish-btn:hover {
+            background: #0984e3;
+            transform: scale(1.05);
+        }
+
+        .hidden-wish {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: floatUp 8s infinite;
+            z-index: -1;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .photo-frame {
+            width: 150px;
+            height: 150px;
+            border: 10px solid white;
+            border-radius: 5px;
+            margin: 20px 0;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .music-control {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="birthdayCard">
+            <div class="card-face card-front">
+                <h1>Samiul Islam Ratul</h1>
+                <img src="" class="birthday-gif" alt="Birthday Celebration">
+                <p class="message">Enter your name!</p>
+                <input type="text" class="name-input" id="nameInput" placeholder="Your Name">
+                <button class="btn" id="openBtn">Login</button>
+            </div>
+            <div class="card-face card-back">
+                <div class="wish-container">
+                    <div class="cake">🎂</div>
+                    <h1 id="birthdayTitle">Happy Birthday!</h1>
+                    <div class="photo-frame" id="photoFrame"></div>
+                    <p class="message" id="personalMessage">Wishing you an amazing day!</p>
+                    
+                    <button class="wish-btn" data-wish="1">Open</button>
+                    <div class="hidden-wish" id="wish1">May your birthday be filled with sunshine, smiles, and all things nice!</div>
+                    
+                    <button class="wish-btn" data-wish="2">Open</button>
+                    <div class="hidden-wish" id="wish2">Wishing you health, wealth and happiness today and always!</div>
+                    
+                    <button class="wish-btn" data-wish="3">Open</button>
+                    <div class="hidden-wish" id="wish3">Hope your birthday is as wonderful and special as you are!</div>
+                    
+                    <button class="btn" id="closeBtn" style="margin-top: 20px;">Close Card</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="music-control" id="musicControl">🎵</div>
+
+    <audio id="birthdayMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.getElementById('birthdayCard');
+            const openBtn = document.getElementById('openBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const nameInput = document.getElementById('nameInput');
+            const birthdayTitle = document.getElementById('birthdayTitle');
+            const personalMessage = document.getElementById('personalMessage');
+            const photoFrame = document.getElementById('photoFrame');
+            const wishBtns = document.querySelectorAll('.wish-btn');
+            const musicControl = document.getElementById('musicControl');
+            const birthdayMusic = document.getElementById('birthdayMusic');
+            
+            // Different photo options
+            const photos = [
+                'https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+                'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+                'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+            ];
+            
+            // Different color themes for the back
+            const colorThemes = [
+                'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+                'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
+                'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
+                'linear-gradient(135deg, #a6c1ee 0%, #fbc2eb 100%)'
+            ];
+            
+            // Music toggle
+            let musicPlaying = false;
+            musicControl.addEventListener('click', function() {
+                if (musicPlaying) {
+                    birthdayMusic.pause();
+                    musicControl.textContent = '🎵';
+                } else {
+                    birthdayMusic.play();
+                    musicControl.textContent = '🔊';
+                }
+                musicPlaying = !musicPlaying;
+            });
+            
+            // Open card
+            openBtn.addEventListener('click', function() {
+                const name = nameInput.value.trim();
+                if (name === '') {
+                    nameInput.style.borderColor = 'red';
+                    return;
+                }
+                
+                // Personalize the card
+                birthdayTitle.textContent = `Happy Birthday, ${name}!`;
+                personalMessage.textContent = `Dear ${name}, wishing you the most wonderful birthday!`;
+                
+                // Set random photo
+                photoFrame.style.backgroundImage = `url(${photos[Math.floor(Math.random() * photos.length)]})`;
+                
+                // Set random color theme
+                document.querySelector('.card-back').style.background = 
+                    colorThemes[Math.floor(Math.random() * colorThemes.length)];
+                
+                // Open the card
+                card.classList.add('open');
+                
+                // Create confetti
+                createConfetti();
+                
+                // Create balloons
+                createBalloons();
+            });
+            
+            // Close card
+            closeBtn.addEventListener('click', function() {
+                card.classList.remove('open');
+                nameInput.value = '';
+                
+                // Hide all wishes when closing
+                document.querySelectorAll('.hidden-wish').forEach(wish => {
+                    wish.style.display = 'none';
+                });
+            });
+            
+            // Wish buttons
+            wishBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const wishNum = this.getAttribute('data-wish');
+                    const wishElement = document.getElementById(`wish${wishNum}`);
+                    
+                    // Toggle wish visibility
+                    if (wishElement.style.display === 'block') {
+                        wishElement.style.display = 'none';
+                    } else {
+                        // Hide all other wishes first
+                        document.querySelectorAll('.hidden-wish').forEach(wish => {
+                            wish.style.display = 'none';
+                        });
+                        wishElement.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Create confetti effect
+            function createConfetti() {
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffbe76', '#a55eea'];
+                
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = -10 + 'px';
+                    confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                    document.body.appendChild(confetti);
+                    
+                    const animationDuration = Math.random() * 3 + 2;
+                    
+                    confetti.animate([
+                        { top: '-10px', opacity: 1, transform: 'rotate(0deg)' },
+                        { top: '100vh', opacity: 0, transform: 'rotate(' + Math.random() * 360 + 'deg)' }
+                    ], {
+                        duration: animationDuration * 1000,
+                        iterations: Infinity,
+                        delay: Math.random() * 2000
+                    });
+                }
+            }
+            
+            // Create floating balloons
+            function createBalloons() {
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffbe76', '#a55eea', '#ff7675', '#74b9ff'];
+                
+                for (let i = 0; i < 20; i++) {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    balloon.style.left = Math.random() * 100 + 'vw';
+                    balloon.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                    balloon.style.animationDelay = (Math.random() * 5) + 's';
+                    document.body.appendChild(balloon);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
